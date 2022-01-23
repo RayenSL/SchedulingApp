@@ -5,28 +5,10 @@ import {ScheduleEvent} from "../models/Types";
 
 const baseUrl = "https://www.rosterbuster.aero"
 
-export const getAllDutiesFromRoster = (): ScheduleEvent[] => {
-    const headers = new Headers({
-        Accept: "*/*",
-    });
-
-    // try {
-    //     axios.get(`${baseUrl}/wp-content/uploads/dummy-response.json`)
-    //         .then(x => console.log("then", x))
-    //         .catch(x => console.log("catch", x))
-    // }
-
-    try {
-        fetch(`${baseUrl}/wp-content/uploads/dummy-response.json`, {
-            method: "GET",
-            headers,
+export const getAllDutiesFromRoster = (): Promise<ScheduleEvent[]> => {
+    return axios.get(`${baseUrl}/wp-content/uploads/dummy-response.json`)
+        .then((response) => {
+            return response.data
         })
-        // .then(x => console.log("then", x))
-        // .catch(x => console.log("catch", x))
-    } catch (e) {
-        console.log(e)
-    }
-    const mockData = dutyData as ScheduleEvent[]
-    return dutyData
-
+        .catch((error) => console.log(error))
 }

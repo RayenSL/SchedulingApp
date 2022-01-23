@@ -20,7 +20,7 @@ export default function HomeScreen({navigation}: RootHomeScreenProps<'Home'>) {
 
     const loadData = () => {
         setIsLoading(true)
-        setScheduledEvent(getAllDutiesFromRoster())
+        getAllDutiesFromRoster().then(data => setScheduledEvent(data))
         setIsLoading(false)
     }
 

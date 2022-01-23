@@ -103,7 +103,8 @@ export default function DetailScreen(props: any) {
             {event.Captain ? contentKeyValues("Captain", event.Captain) : null}
             {event["First Officer"] ? contentKeyValues("First Officer", event["First Officer"]) : null}
             {event["Flight Attendant"] ? contentKeyValues("Flight Attendant", event["Flight Attendant"]) : null}
-            {event["Aircraft Type"] ? contentKeyValues("Captain", event["Aircraft Type"]) : null}
+            {event["Aircraft Type"] ? contentKeyValues("Aircraft Type", event["Aircraft Type"]) : null}
+            {event.Flightnr ? contentKeyValues("Flight Number", event.Flightnr) : null}
             {event.Tail ? contentKeyValues("Tail", event.Tail) : null}
 
             <View style={styles.informationView}>

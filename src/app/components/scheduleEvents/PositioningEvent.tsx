@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
 })
 
 export const PositioningEvent = (props: Props) => {
-    console.log(props)
     return (
         <View style={styles.container}>
             <FontAwesomeIcon style={styles.icon} icon={faMapSigns} size={40}/>

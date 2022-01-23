@@ -77,9 +77,16 @@ export const RosterListComponent = (props: Props) => {
         for (var i in reducedObjects) {
             shapedData.push(reducedObjects[i])
         }
+        return shapedData.map(obj => {
 
-        return shapedData
+            return {
+                title: new Date(obj.title.substr(6, 4), obj.title.substr(3, 2) - 1, obj.title.substr(0, 2)).toDateString(),
+                data: obj.data
+            }
+        })
+
     }
+
 
     const sortScheduleEvents = (event: ScheduleEvent) => {
         // Missing Schedule event Codes: Training, Debrief and Report events,
