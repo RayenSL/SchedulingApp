@@ -1,9 +1,16 @@
 // @ts-nocheck
-import {SectionList, StatusBar, View, Text} from "react-native";
+import {SectionList, StatusBar, View, Text, TouchableOpacity} from "react-native";
 import {ScheduleEvent} from "../models/Types";
 import {StyleSheet} from 'react-native';
 import * as events from "events";
 import React from "react";
+import {FlightEvent} from "./scheduleEvents/FlightEvent";
+import {DayOffEvent} from "./scheduleEvents/DayOffEvent";
+import {StandbyEvent} from "./scheduleEvents/StandbyEvent";
+import {LayOverEvent} from "./scheduleEvents/LayOverEvent";
+import {PositioningEvent} from "./scheduleEvents/PositioningEvent";
+import {DebriefEvent} from "./scheduleEvents/DebriefEvent";
+import {TrainingEvent} from "./scheduleEvents/TrainingEvent";
 
 const styles = StyleSheet.create({
     container: {
@@ -45,12 +52,18 @@ const styles = StyleSheet.create({
 
 interface Props {
     scheduledEvents: ScheduleEvent[]
+    loadData: () => void
+    isLoading: boolean
+    navigation: any
 }
+
 
 export const RosterListComponent = (props: Props) => {
 
     const dataShaper = (events: ScheduleEvent[]) => {
+        // Create empty array
         const shapedData = []
+        // Reduce array to the required format for the sectionList
         const reducedObjects = events.reduce((acc: ScheduleEvent, item: ScheduleEvent) => {
             if (acc[item.Date] === undefined) {
                 acc[item.Date] = {title: item.Date, data: []}
@@ -60,6 +73,7 @@ export const RosterListComponent = (props: Props) => {
             return acc
         }, {})
 
+        // Push the objects in the array
         for (var i in reducedObjects) {
             shapedData.push(reducedObjects[i])
         }
@@ -68,21 +82,25 @@ export const RosterListComponent = (props: Props) => {
     }
 
     const sortScheduleEvents = (event: ScheduleEvent) => {
-
         // Missing Schedule event Codes: Training, Debrief and Report events,
         // Unknown Schedule event code : Positioning event
         switch (event.DutyID) {
             case "FLT":
-                break
+                return <FlightEvent scheduleEvent={event}/>
             case "DO":
-                break
+                return <DayOffEvent scheduleEvent={event}/>
             case "POS":
-                break
+                return <PositioningEvent scheduleEvent={event}/>
             case "SBY":
-                break
+                return <StandbyEvent scheduleEvent={event}/>
             case "OFD":
-                break
-
+                return <LayOverEvent scheduleEvent={event}/>
+            // TODO Declare right name for TrainingEvent
+            case "SIM":
+                return <TrainingEvent scheduleEvent={event}/>
+            // TODO Declare right name for DebriefEvent, for now its default
+            default:
+                return <DebriefEvent scheduleEvent={event}/>
         }
 
     }
@@ -94,19 +112,21 @@ export const RosterListComponent = (props: Props) => {
             </View>
         )
     }
-
-    const Item = ({title}) => (
-        <View style={styles.item}>
-            <Text style={styles.title}>{title}</Text>
-        </View>
-    );
-
     return (
+
         <SectionList
             style={styles.list}
+            onRefresh={props.loadData}
             sections={dataShaper(props.scheduledEvents)}
             keyExtractor={(item, index) => item + index}
-            renderItem={({item}) => <Item title={item.Flightnr}/>}
+            renderItem={({item}) => {
+                return (
+                    <TouchableOpacity onPress={() => props.navigation.navigate("Detail", {item: item})}>
+                        {sortScheduleEvents(item)}
+                    </TouchableOpacity>
+                )
+            }}
+            refreshing={props.isLoading}
             renderSectionHeader={renderHeader}
         />
     )

@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {View} from '../components/Themed';
-import {RootTabScreenProps} from '../../../types';
+import {RootHomeScreenProps} from '../../../types';
 import React, {useEffect} from "react";
 import {getAllDutiesFromRoster} from "../api/BackendService";
 import {ScheduleEvent} from "../models/Types";
@@ -14,21 +14,24 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function HomeScreen({navigation}: RootTabScreenProps<'TabOne'>) {
+export default function HomeScreen({navigation}: RootHomeScreenProps<'Home'>) {
     const [scheduledEvents, setScheduledEvent] = React.useState([] as ScheduleEvent[])
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const loadData = () => {
+        setIsLoading(true)
+        setScheduledEvent(getAllDutiesFromRoster())
+        setIsLoading(false)
+    }
 
     useEffect(() => {
-        setScheduledEvent(getAllDutiesFromRoster())
+        loadData()
     }, [])
 
     return (
         <View style={styles.container}>
-            {
-                scheduledEvents.length > 0 ?
-                    <RosterListComponent scheduledEvents={scheduledEvents}/>
-                    :
-                    null
-            }
+            <RosterListComponent navigation={navigation} isLoading={isLoading} loadData={loadData}
+                                 scheduledEvents={scheduledEvents}/>
         </View>
 
     );
