@@ -5,6 +5,7 @@ import React, {useEffect} from "react";
 import {getAllDutiesFromRoster} from "../api/BackendService";
 import {ScheduleEvent} from "../models/Types";
 import {RosterListComponent} from "../components/RosterListComponent";
+import {useIsConnected} from "react-native-offline";
 
 const styles = StyleSheet.create({
     container: {
@@ -15,6 +16,8 @@ const styles = StyleSheet.create({
 });
 
 export default function HomeScreen({navigation}: RootHomeScreenProps<'Home'>) {
+    const isConnected = useIsConnected();
+
     const [scheduledEvents, setScheduledEvent] = React.useState([] as ScheduleEvent[])
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -30,9 +33,13 @@ export default function HomeScreen({navigation}: RootHomeScreenProps<'Home'>) {
 
     return (
         <View style={styles.container}>
-            <RosterListComponent navigation={navigation} isLoading={isLoading} loadData={loadData}
-                                 scheduledEvents={scheduledEvents}/>
+            {
+                scheduledEvents.length > 0 ?
+                    <RosterListComponent navigation={navigation} isLoading={isLoading} loadData={loadData}
+                                         scheduledEvents={scheduledEvents}/>
+                    :
+                    null
+            }
         </View>
-
     );
 }

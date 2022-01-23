@@ -77,6 +77,7 @@ export const RosterListComponent = (props: Props) => {
         for (var i in reducedObjects) {
             shapedData.push(reducedObjects[i])
         }
+        console.log(shapedData)
         return shapedData.map(obj => {
 
             return {

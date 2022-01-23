@@ -6,9 +6,11 @@ import {ScheduleEvent} from "../models/Types";
 const baseUrl = "https://www.rosterbuster.aero"
 
 export const getAllDutiesFromRoster = (): Promise<ScheduleEvent[]> => {
+
+    const data = dutyData as ScheduleEvent[]
     return axios.get(`${baseUrl}/wp-content/uploads/dummy-response.json`)
         .then((response) => {
             return response.data
         })
-        .catch((error) => console.log(error))
+        .catch((error) => data)
 }
